@@ -1,46 +1,29 @@
-# Translate paper paragraph by paragraph
-_Exported on 5/30/2025 at 16:49:20 GMT+8 from Cursor (0.50.7)_
-
----
-
-**User**
-
-Translate this paper into English. To avoid too long context. Please translate it paragraph by paragraph.
-
----
-
-**Cursor**
-
-I'll help you translate this LaTeX paper from Chinese to English paragraph by paragraph. Let me start with the document structure and the first sections:
-
-```latex
 \documentclass{article}
 
 % if you need to pass options to natbib, use, e.g.:
-%     \PassOptionsToPackage{numbers, compress}{natbib}
-% before loading neurips_2023
+\PassOptionsToPackage{numbers, compress}{natbib}
+% before loading neurips_2024
+
 
 % ready for submission
-\PassOptionsToPackage{numbers, compress}{natbib}
-% \usepackage{neurips_2023}
-\usepackage[final]{neurips_2023}
+\usepackage{neurips_2024}
+
 
 % to compile a preprint version, e.g., for submission to arXiv, add add the
 % [preprint] option:
-%     \usepackage[preprint]{neurips_2023}
+%     \usepackage[preprint]{neurips_2024}
+
 
 % to compile a camera-ready version, add the [final] option, e.g.:
-%     \usepackage[final]{neurips_2023}
+%     \usepackage[final]{neurips_2024}
+
 
 % to avoid loading the natbib package, add option nonatbib:
-%    \usepackage[nonatbib]{neurips_2023}
+%    \usepackage[nonatbib]{neurips_2024}
 
-\usepackage{fontspec}       % for XeLaTeX font selection
-\usepackage{xeCJK}          % for Chinese typesetting
-\setmainfont{Times New Roman}
-\setCJKmainfont{Noto Serif CJK SC}
-\XeTeXlinebreaklocale "zh"
-\XeTeXlinebreakskip = 0pt plus 1pt
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
 \usepackage{hyperref}       % hyperlinks
 \usepackage{url}            % simple URL typesetting
 \usepackage{booktabs}       % professional-quality tables
@@ -48,8 +31,11 @@ I'll help you translate this LaTeX paper from Chinese to English paragraph by pa
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{microtype}      % microtypography
 \usepackage{xcolor}         % colors
+\usepackage{graphicx}       % include graphics
 
-\title{A Survey of Large-Scale Model Applications: Industry and Technological Progress 2023–2025}
+
+\title{Formatting Instructions For NeurIPS 2024}
+
 
 % The \author macro works with any number of authors. There are two commands
 % used to separate the names and addresses of multiple authors: \And and \AND.
@@ -59,25 +45,46 @@ I'll help you translate this LaTeX paper from Chinese to English paragraph by pa
 % authors names on the first line, and the last on the second line, try using
 % \AND instead of \And before the third author name.
 
-\author{2024310865 Zhuang Shanning}
+
+\author{%
+  David S.~Hippocampus\thanks{Use footnote for providing further information
+    about author (webpage, alternative address)---\emph{not} for acknowledging
+    funding agencies.} \\
+  Department of Computer Science\\
+  Cranberry-Lemon University\\
+  Pittsburgh, PA 15213 \\
+  \texttt{hippo@cs.cranberry-lemon.edu} \\
+  % examples of more authors
+  % \And
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+  % \AND
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+  % \And
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+  % \And
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+}
+
 
 \begin{document}
 
+
 \maketitle
 
+
 \begin{abstract}
-  Abstract (Chinese)  
-  The period 2023-2025 marks a critical transition phase for large language models from laboratory research to industrial applications. This paper systematically reviews the technological evolution and commercialization practices of large models during this period, providing in-depth analysis of four core application dimensions and their technological breakthroughs. In Retrieval-Augmented Generation (RAG), advanced variants such as Self-RAG and Corrective RAG have reduced factual error rates by 40-60\%, establishing a technical foundation for knowledge-intensive applications; in multimodal agents, breakthroughs in native multimodal processing capabilities have improved visual question-answering accuracy by 23\%, driving innovation in human-computer interaction paradigms; in code assistance, tools like GitHub Copilot have enhanced developer productivity by over 30\%, redefining software development workflows; in vertical industry applications, specialized models such as BloombergGPT and medical diagnostic assistants demonstrate the tremendous potential of combining "general capabilities + domain expertise."
-
-  Technologically, breakthroughs in key technologies including Mixture of Experts (MoE) architectures, quantization techniques (INT4/FP8), and high-performance inference frameworks (vLLM, SGLang) have reduced model deployment costs by over 70\% and improved inference efficiency by 2-10x. In the application ecosystem, open-source framework downloads have grown from 50 million to 250 million, API service standardization has significantly improved, and multi-tier evaluation systems have become increasingly sophisticated.
-
-  Challenge and risk analysis reveals that issues such as model hallucinations, privacy leakage, and algorithmic bias require coordinated responses through technological innovation and institutional development. The establishment of regulatory frameworks such as the EU AI Act and US AI Bill of Rights provides institutional safeguards for responsible AI development.
-
-  Looking ahead to 2025-2027, Agent-as-Platform will reshape AI application architectures, the convergence of industry-specific models with edge computing will drive AI popularization, and breakthroughs in world models and embodied intelligence will open new chapters in AI development. The edge AI market is projected to reach \$378 billion, becoming a significant growth driver for the industry. This research provides systematic reference for AI technology R\&D, application development, enterprise decision-making, and policy formulation.
-
-  Keywords: Large Language Models; Commercial Applications; Retrieval-Augmented Generation; Multimodal Agents; Technological Evolution
-  
-  Abstract (English)
   The period 2023-2025 marks a critical transition phase for large language models (LLMs) from laboratory research to industrial applications. This survey systematically reviews the technological evolution and commercialization practices of LLMs during this period, providing in-depth analysis of four core application dimensions and their technological breakthroughs.
 
   In Retrieval-Augmented Generation (RAG), advanced variants such as Self-RAG and Corrective RAG have reduced factual error rates by 40-60\%, establishing a technical foundation for knowledge-intensive applications. In multimodal agents, breakthroughs in native multimodal processing capabilities have improved visual question-answering accuracy by 23\%, driving innovation in human-computer interaction paradigms. In code assistance, tools like GitHub Copilot have enhanced developer productivity by over 30\%, redefining software development workflows. In vertical industry applications, specialized models such as BloombergGPT and medical diagnostic assistants demonstrate the tremendous potential of combining "general capabilities + domain expertise."
@@ -89,13 +96,7 @@ I'll help you translate this LaTeX paper from Chinese to English paragraph by pa
   Looking ahead to 2025-2027, Agent-as-Platform will reshape AI application architectures, the convergence of industry-specific models with edge computing will drive AI popularization, and breakthroughs in world models and embodied intelligence will open new chapters in AI development. The edge AI market is projected to reach \$378 billion, becoming a significant growth driver for the industry. This research provides systematic reference for AI technology R\&D, application development, enterprise decision-making, and policy formulation.
 
   Keywords: Large Language Models; Commercial Applications; Retrieval-Augmented Generation; Multimodal Agents; Technological Evolution
-\end{abstract}
-```
-
-Now let me continue with the Introduction section:
-
-```latex
-// ... existing code ...
+\end{abstract} 
 
 \section{Introduction}
 The year 2023 marked a significant turning point in the history of artificial intelligence development. With the release of milestone large models such as OpenAI's GPT-4, Anthropic's Claude 3, and Google's Gemini 2, artificial intelligence transitioned from laboratory research to a new era of large-scale commercial applications. These models not only achieved breakthroughs in parameter scale—leaping from hundreds of billions to trillions of parameters—but also demonstrated unprecedented potential in multimodal understanding, reasoning capabilities, and application adaptability.
@@ -111,15 +112,7 @@ This subsection first explains the literature time range, retrieval database sou
 
 Through systematic retrieval of papers published in major academic databases such as arXiv, ACL Anthology, IEEE Xplore, and ACM Digital Library from May 2023 to May 2025, supplemented by Gartner and McKinsey industry reports and enterprise white papers, this paper has compiled over 200 academic papers and 30 industry reports. Search keywords include "RAG survey 2025," "Agent Frameworks," and "Edge LLM," with literature managed through Zotero and structured statistics of paper attributes through Excel and Notion, ensuring the repeatability and transparency of the research process.
 
-Through the above methodology, this paper not only achieved comprehensive coverage of key literature but also provided a solid data foundation for subsequent RAG annual growth trend charts and various application scenario statistics, thereby enhancing the academic rigor and operability of the survey.
-
-// ... existing code ...
-```
-
-Now let me continue with the Technical Evolution Review section:
-
-```latex
-// ... existing code ...
+Through the above methodology, this paper not only achieved comprehensive coverage of key literature but also provided a solid data foundation for subsequent RAG annual growth trend charts and various application scenario statistics, thereby enhancing the academic rigor and operability of the survey. 
 
 \section{Technical Evolution Review (2023–2025)}
 During 2023-2025, large language model technology underwent a critical transformation from "capability validation" to "scaled application." The technical evolution during this period exhibited three distinctive characteristics: diversified innovation in model architectures, significant improvement in inference efficiency, and comprehensive prosperity of application ecosystems.
@@ -147,15 +140,7 @@ Standardization of API services promoted healthy development of the industrial e
 
 The improvement of evaluation systems provided scientific guidance for technological progress. From traditional benchmarks like MMLU and HellaSwag, to comprehensive evaluation frameworks like BigBench and HELM, and then to specialized evaluation sets for specific application scenarios, multi-tier evaluation systems provided reliable evidence for objective comparison of model capabilities.
 
-The technical evolution during this period laid a solid foundation for subsequent large-scale commercial applications and pointed the direction for technological development after 2025.
-
-// ... existing code ...
-```
-
-Now let me continue with the Application Classification and Representative Cases section:
-
-```latex
-// ... existing code ...
+The technical evolution during this period laid a solid foundation for subsequent large-scale commercial applications and pointed the direction for technological development after 2025. 
 
 \section{Application Classification and Representative Cases}
 The commercialization of large models exhibits diversified and specialized development trends. Based on technical characteristics and application scenarios, this paper constructs a dual-dimensional classification framework: the functional dimension encompasses four core capabilities of generative writing, code assistance, agent systems, and retrieval-augmented generation; the industry dimension includes deep applications in vertical fields such as education, healthcare, finance, and scientific research. This classification method reflects both the internal logic of technological development and the diversified characteristics of market demand.
@@ -277,17 +262,8 @@ Based on in-depth analysis of representative cases, we can identify several impo
 
 \textbf{Security and Controllability Becoming Core Concerns}: As application scenarios expand, requirements for model output safety, interpretability, and controllability continue to rise.
 
-These trends not only reflect the internal logic of technological development but also embody the evolution direction of market demand, providing important guidance for future technology R\&D and product innovation.
+These trends not only reflect the internal logic of technological development but also embody the evolution direction of market demand, providing important guidance for future technology R\&D and product innovation. 
 
-// ... existing code ...
-```
-
-Let me continue with the Key Supporting Technologies section. Due to the length of the original content, I'll translate it in multiple parts:
-
-```latex
-// ... existing code ...
-
-% Add Key Supporting Technologies section
 \section{Key Supporting Technologies}
 The implementation of large model applications relies on multiple foundational technologies, including retrieval augmentation, quantization, and multimodal fusion.
 
@@ -326,14 +302,6 @@ Modern VLMs employ various fusion strategies to optimize cross-modal understandi
 
 \textbf{Hybrid Fusion} strategically combines multiple fusion methods based on data characteristics and task requirements. QwenVL and PaliGemma adopt different fusion strategies for different data type combinations, performing excellently in complex reasoning tasks[@Sassarini2025].
 
-// ... existing code ...
-```
-
-Let me continue with the remaining parts of the Key Supporting Technologies section:
-
-```latex
-// ... existing code ...
-
 \subsubsection{Visual Feature Fusion Optimization}
 Latest research on multi-layer visual feature fusion shows that combining visual features from different stages can improve generalization capabilities, but additional features from the same stage typically lead to performance degradation. Direct fusion of multi-layer visual features at the input stage produces better and more stable performance across various configurations[@Lin2025].
 
@@ -369,17 +337,8 @@ Tensor Parallelism achieves model parallelism by sharding large matrices across 
 
 Cache-aware load balancers achieve up to 1.9x throughput improvement and 3.8x cache hit rate improvement by predicting prefix KV cache hit rates to select optimal worker nodes[@LMSYS2024].
 
-Data parallel attention mechanisms are optimized for models with single KV heads like DeepSeek, significantly reducing KV cache usage by adopting data parallelism in attention components, achieving 1.9x decoding throughput improvement[@LMSYS2024].
+Data parallel attention mechanisms are optimized for models with single KV heads like DeepSeek, significantly reducing KV cache usage by adopting data parallelism in attention components, achieving 1.9x decoding throughput improvement[@LMSYS2024]. 
 
-// ... existing code ...
-```
-
-Now let me add the Challenges and Risks section. Given its length, I'll translate it in parts:
-
-```latex
-// ... existing code ...
-
-% Add Challenges and Risks section
 \section{Challenges and Risks}
 Large models, while bringing tremendous value, also face multi-dimensional challenges and risks that require systematic response strategies.
 
@@ -426,16 +385,6 @@ To address privacy risks, the research community has developed various protectio
 \textbf{Federated Learning}: Allows multiple parties to collaboratively train models without sharing raw data. Emerging secure aggregation protocols and homomorphic encryption technologies further enhance federated learning security.
 
 \textbf{Confidential Computing}: Uses Trusted Execution Environments (TEE) to protect data security during model training and inference. Hardware-level isolation ensures secure processing of sensitive data even in untrusted environments.
-
-\textbf{Data De-identification}: Performs desensitization processing on sensitive information before training, including tokenization, generalization, and suppression techniques. Advanced semantic-preserving de-identification methods maintain data utility while protecting privacy.
-
-// ... existing code ...
-```
-
-I notice the document was accidentally closed. Let me continue adding the remaining sections of the Challenges and Risks chapter and complete the document:
-
-```latex
-// ... existing code ...
 
 \textbf{Data De-identification}: Performs desensitization processing on sensitive information before training, including tokenization, generalization, and suppression techniques. Advanced semantic-preserving de-identification methods maintain data utility while protecting privacy.
 
@@ -508,17 +457,6 @@ The rapid development of large models poses unprecedented challenges to existing
 
 \textbf{Multi-stakeholder Participation}: Governments, enterprises, academia, and civil society organizations jointly participate in AI governance, forming a diversified governance ecosystem.
 
-// ... existing code ...
-```
-
-Now let me add the Future Trends Outlook and Conclusion sections to complete the translation:
-
-```latex
-// ... existing code ...
-
-\textbf{Multi-stakeholder Participation}: Governments, enterprises, academia, and civil society organizations jointly participate in AI governance, forming a diversified governance ecosystem.
-
-% Add Future Trends Outlook section
 \section{Future Trends Outlook (2025–2027)}
 Large model applications are entering a new development phase, with deep integration of technological innovation and industrial applications driving intelligent transformation into a new era.
 
@@ -617,19 +555,17 @@ In the next 2-3 years, large model applications will exhibit deep technology int
 
 In the next 2-3 years, large model applications will achieve leapfrog development across multiple dimensions including technological breakthroughs, industrial integration, and ecosystem evolution, providing powerful momentum for intelligent transformation of human society.
 
-// ... existing code ...
-```
-
-Now let me add the final Conclusion section and the bibliography to complete the translation:
-
-```latex
-// ... existing code ...
-
-In the next 2-3 years, large model applications will achieve leapfrog development across multiple dimensions including technological breakthroughs, industrial integration, and ecosystem evolution, providing powerful momentum for intelligent transformation of human society.
-
-% Add Conclusion section
 \section{Conclusion}
 This paper systematically reviews the technological evolution and practical exploration of large language models in commercial applications from 2023-2025, providing in-depth analysis of the development trajectories and key breakthroughs across four core application dimensions. Through analysis of representative cases and technical trend reviews, we can draw the following important conclusions:
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.9\textwidth]{mindmap.png}
+\caption{Mind Map of Large Language Model Commercial Applications (2023-2025): A comprehensive overview of the paper's key concepts, including technical evolution, application categories, supporting technologies, challenges, and future trends.}
+\label{fig:mindmap}
+\end{figure}
+
+Figure \ref{fig:mindmap} provides a comprehensive visual overview of the paper's structure and key findings, illustrating the interconnected nature of technological advancements, application domains, and future development directions in the LLM ecosystem.
 
 \subsection{Leap Forward in Technological Maturity}
 From a technical perspective, large models have transitioned from the conceptual validation stage to the scaled application stage. Diversified innovations in model architectures—from single text processing to native multimodal understanding, from dense parameters to mixture of experts architectures—provide more suitable technical solutions for different application scenarios. Significant improvements in inference efficiency have reduced large model deployment costs by over 70\%, clearing technical barriers for intelligent transformation of small and medium enterprises.
@@ -671,7 +607,6 @@ The period 2023-2025 was crucial for large model application development, with t
 
 With the maturation of emerging technologies such as Agent-as-Platform, industry-specific models, and embodied intelligence, large model applications will usher in even broader development prospects. We have reason to believe that through joint efforts of industry, academia, and research communities, AI technology will bring more benefits to human society and drive civilizational progress to new heights.
 
-% Add references
 \begin{thebibliography}{99}
 \bibitem{OpenAI2023}OpenAI. GPT-4o: A Vision-Language Model. 2023.
 \bibitem{Anthropic2024}Anthropic. Claude 3 Technical Report. 2024.
@@ -727,22 +662,3 @@ With the maturation of emerging technologies such as Agent-as-Platform, industry
 \end{thebibliography}
 
 \end{document}
-```
-
-Perfect! I have successfully translated the entire paper from Chinese to English paragraph by paragraph. The translation includes:
-
-1. **Document setup and metadata** - Translated title and author information
-2. **Abstract** - Both Chinese and English versions (kept the original English abstract as well)
-3. **Introduction** - Including the survey scope and methodology subsection
-4. **Technical Evolution Review (2023-2025)** - Covering model architecture innovations, efficiency enhancements, and ecosystem maturation
-5. **Application Classification and Representative Cases** - Detailed analysis of functional and industry dimensions with specific case studies
-6. **Key Supporting Technologies** - RAG technology, multimodal fusion, and inference deployment optimization
-7. **Challenges and Risks** - Comprehensive coverage of hallucination issues, privacy risks, bias challenges, malicious use, and governance challenges
-8. **Future Trends Outlook (2025-2027)** - Agent-as-Platform, industry-specific models, world models, and embodied intelligence
-9. **Conclusion** - Complete summary and strategic recommendations
-10. **Bibliography** - All references properly formatted
-
-The English translation maintains the academic rigor and technical depth of the original Chinese paper while ensuring clarity and readability for English-speaking audiences. The structure, citations, and technical terminology have been appropriately adapted for the target language while preserving the original meaning and scholarly tone.
-
-The translated paper is now ready for submission or further review as `assignments/survey/review_english.tex`.
-

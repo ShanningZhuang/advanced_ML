@@ -1,0 +1,3 @@
+[submodule "assignments/code/report/PDFToMarkdownLLM"]
+	path = assignments/code/report/PDFToMarkdownLLM
+	url = https://github.com/ShanningZhuang/PDFToMarkdownLLM.git

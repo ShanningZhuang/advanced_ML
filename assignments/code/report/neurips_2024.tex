@@ -1,0 +1,229 @@
+\documentclass{article}
+
+% if you need to pass options to natbib, use, e.g.:
+\PassOptionsToPackage{numbers, compress}{natbib}
+% before loading neurips_2024
+
+
+% ready for submission
+% \usepackage{neurips_2024}
+
+
+% to compile a preprint version, e.g., for submission to arXiv, add add the
+% [preprint] option:
+%     \usepackage[preprint]{neurips_2024}
+
+
+% to compile a camera-ready version, add the [final] option, e.g.:
+\usepackage[final]{neurips_2024}
+
+
+% to avoid loading the natbib package, add option nonatbib:
+%    \usepackage[nonatbib]{neurips_2024}
+
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}         % colors
+\usepackage{graphicx}       % include graphics
+
+
+\title{PDFToMarkdownLLM: A Pluggable Tool for LLM-Agent PDF Processing}
+
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to LaTeX to determine where to break the
+% lines. Using \AND forces a line break at that point. So, if LaTeX puts 3 of 4
+% authors names on the first line, and the last on the second line, try using
+% \AND instead of \And before the third author name.
+
+
+\author{%
+  Shanning Zhuang \thanks{1st year PhD student at Tsinghua University, working on Reinforcement Learning and Interactive Robotics. Contact: shanning.zhuang@outlook.com} \\
+  School of Aerospace Engineering\\
+  Tsinghua University\\
+  Beijing, China \\
+  \texttt{shanning.zhuang@outlook.com} \\
+}
+
+\begin{document}
+
+
+\maketitle
+
+
+\begin{abstract}
+The rapid adoption of Retrieval-Augmented Generation (RAG) pipelines has created an urgent need for robust PDF processing tools that can seamlessly integrate with LLM-based agents. While PDFs remain the dominant format for enterprise and research documents, existing parsing solutions often fail to provide the clean, structured output required for modern AI systems, and lack standardized integration pathways for agent frameworks. This paper presents the design and implementation of PDFToMarkdownLLM, a pluggable tool specifically engineered to bridge the gap between PDF documents and LLM agents. We propose a modular multi-backend architecture that transforms PDFs into clean Markdown with preserved layout information, implements real-time streaming capabilities through WebSocket connections, and provides standardized REST and tool-calling APIs for seamless integration with popular agent frameworks including LangChain, LlamaIndex, and OpenAI Assistants. The system features comprehensive metadata extraction including page mapping and figure handling, containerized deployment options for flexible integration, and robust error handling for diverse document types. Our open-source implementation demonstrates how thoughtful architectural design can create a practical bridge between document processing and agent systems, enabling broader adoption of document-based AI applications across enterprise and research environments.
+\end{abstract}
+
+\section{Introduction}
+
+The integration of Large Language Models (LLMs) into intelligent agent systems has revolutionized how we approach document-based workflows. However, a fundamental challenge persists: the gap between document-centric information storage and the structured input requirements of modern AI systems. PDF documents, while remaining the dominant format for enterprise and research content, present significant processing challenges for LLM-based agents that require clean, structured text input for optimal performance in Retrieval-Augmented Generation (RAG) pipelines.
+
+This challenge has become increasingly critical as RAG architectures have evolved from experimental approaches to production-ready systems. Organizations worldwide are deploying document-based AI applications that must process vast collections of PDFs containing complex layouts, tables, mathematical expressions, and embedded figures. However, existing PDF processing solutions create integration bottlenecks that limit the practical deployment of these systems.
+
+Current approaches to PDF processing for AI systems suffer from three primary limitations. First, traditional parsing libraries like PyMuPDF and pdfminer.six, while reliable for basic text extraction, often fail to preserve the structural information necessary for understanding complex documents. Second, advanced parsing solutions such as LlamaParse, Docling-AI, and Unstructured.io operate as standalone tools that require significant integration effort to incorporate into agent workflows. Third, existing solutions lack the real-time processing capabilities and standardized APIs needed for responsive agent interactions.
+
+The emergence of specialized frameworks for agent development—including LangChain, LlamaIndex, and OpenAI Assistants—has created new opportunities for standardized integration patterns. These frameworks provide well-defined interfaces for tool integration, but require PDF processing solutions designed specifically for agent use cases rather than general-purpose document conversion.
+
+This paper presents PDFToMarkdownLLM, a comprehensive system designed to address these integration challenges through careful architectural design and implementation. Our approach prioritizes practical deployment considerations while maintaining high-quality document processing capabilities. Rather than developing yet another PDF parsing algorithm, we focus on creating a robust integration layer that bridges existing parsing technologies with modern agent frameworks.
+
+The primary contributions of this work include: (1) a modular multi-backend architecture that balances processing quality with deployment flexibility, (2) real-time streaming capabilities through WebSocket connections for responsive user experiences, (3) standardized REST and tool-calling APIs designed for seamless agent framework integration, (4) comprehensive metadata extraction including page mapping and figure handling to support advanced agent capabilities, and (5) containerized deployment options that minimize integration overhead in diverse system architectures.
+
+\textbf{Code Availability:} The complete implementation of PDFToMarkdownLLM is available as open-source software under the MIT license at: \url{https://github.com/ShanningZhuang/PDFToMarkdownLLM}. A live demonstration is accessible at \url{https://pdf2markdown.tech:24680/}.
+
+\section{Related Work}
+
+The field of document processing for AI systems has evolved rapidly, driven by the increasing adoption of RAG architectures and the need for structured document ingestion pipelines. This section surveys the key developments across traditional PDF parsing, multimodal document understanding, and retrieval-augmented generation systems.
+
+\subsection{Traditional PDF Parsing and OCR Systems}
+
+Traditional PDF parsing approaches relied primarily on rule-based extraction methods using libraries such as pdfminer.six and PyMuPDF, which while effective for simple documents, often struggled with complex layouts, tables, and mathematical content. The foundational work on OCR systems, including Tesseract~\cite{smith2007tesseract}, established the basic paradigms for text extraction from document images.
+
+Recent advances in deep learning-based OCR have significantly improved extraction quality. PP-OCRv2~\cite{du2020pp-ocrv2} introduced efficient architectures for ultra-lightweight OCR systems, while specialized tools like LlamaParse~\cite{llamaindex2024} utilize few-shot prompting to reconstruct document headings and structure. The comprehensive survey by Zhang et al.~\cite{zhang2024document} provides detailed analysis of document parsing challenges, methods, and prospects across layout analysis, OCR, mathematical expression recognition, and table detection.
+
+\subsection{Multimodal Document Understanding}
+
+The emergence of transformer-based architectures revolutionized document understanding through multimodal approaches that jointly process text, layout, and visual information. LayoutLM~\cite{xu2020layoutlm} pioneered this direction by combining BERT-style language modeling with 2D positional embeddings, enabling models to understand spatial relationships in documents.
+
+Subsequent models built upon this foundation with increasingly sophisticated architectures. LayoutLMv2~\cite{xu2021layoutlmv2} introduced vision-text-layout transformers that better integrate visual and textual modalities, while LayoutLMv3~\cite{huang2022layoutlmv3} unified text and image masking for improved pre-training. These models demonstrated significant improvements on document understanding benchmarks but required extensive training data and computational resources.
+
+The introduction of end-to-end models like Donut~\cite{kim2021donut} and Nougat~\cite{blecher2023nougat} marked another milestone. Donut eliminated the need for separate OCR by directly processing document images, while Nougat specifically targeted academic documents with complex mathematical expressions and tables. More recent developments include UDOP~\cite{tang2022udop} which unifies vision, text, and layout processing through a single transformer architecture.
+
+Recent efficiency improvements have focused on scalable approaches for long-context scenarios. GeoLayoutLM~\cite{luo2023geolayoutlm} explicitly models geometric relations for enhanced feature representation, while LayTokenLLM~\cite{zhu2025laytokenllm} proposes a simple yet effective layout token approach that shares position IDs between text and layout tokens, addressing scalability issues in long-context document understanding.
+
+\subsection{Retrieval-Augmented Generation for Documents}
+
+The rapid adoption of RAG systems has created new demands for high-quality document processing. Comprehensive surveys~\cite{gao2023retrieval,zhao2024comprehensive} highlight the evolution from naive RAG to advanced and modular RAG systems, emphasizing the critical role of document preprocessing in overall system performance.
+
+Recent research has focused on improving retrieval quality through better document segmentation and query refinement. RQ-RAG~\cite{chan2024rq} proposes learning to refine queries for better retrieval performance, addressing challenges where ambiguous or complex queries necessitate further clarification for accurate responses. MAIN-RAG~\cite{chang2025main} introduces multi-agent filtering mechanisms to improve document selection quality, achieving 2-11\% improvement in answer accuracy while reducing irrelevant retrieved documents.
+
+For long-context scenarios, hierarchical document refinement approaches like LongRefiner~\cite{jin2025hierarchical} leverage structural characteristics of documents to reduce computational costs while maintaining performance. These developments reflect the growing sophistication of RAG systems in handling complex document processing requirements.
+
+\subsection{Specialized Tools and Frameworks}
+
+The growing demand for better PDF processing has led to specialized tools targeting specific challenges. Unstructured.io provides a comprehensive suite of document processing tools with particular strength in preserving structural metadata. Recent benchmarks~\cite{procycons2024benchmark} comparing Docling, Unstructured, and LlamaParse reveal important trade-offs between processing speed, accuracy, and structural preservation, with Docling achieving superior table extraction accuracy (97.9\%) while maintaining reasonable processing speeds.
+
+Evaluation frameworks like the Document Understanding Benchmark (DUE)~\cite{borchmann2021due} provide standardized assessment across multiple document understanding tasks, while domain-specific benchmarks like CORD~\cite{park2019cord} enable targeted performance evaluation for business documents.
+
+\subsection{Integration Challenges and Gaps}
+
+Despite these advances, significant gaps remain in translating document processing capabilities into practical agent-based systems. Most existing tools are designed for specific tasks rather than general-purpose agent integration, requiring complex orchestration to combine multiple technologies. The lack of standardized evaluation metrics for agent-specific document processing tasks further complicates the landscape, as academic benchmarks may not reflect real-world requirements of agent systems that need to extract specific information types or maintain long-term coherence across document collections.
+
+Our work addresses these limitations by providing a comprehensive solution that optimizes both parsing quality and agent integration, bridging the gap between advanced document understanding capabilities and practical deployment requirements in agent-based systems.
+
+\section{Methodology}
+
+\subsection{Architecture Overview}
+
+PDFToMarkdownLLM employs a modular architecture designed to balance processing quality with integration flexibility. The system consists of four primary components: the PDF processing engine, the streaming interface, the API layer, and the metadata extraction module.
+
+The PDF processing engine supports multiple backends to accommodate different document types and quality requirements. The default implementation utilizes PyMuPDF for reliable text extraction, while an optional layout-aware mode integrates with Unstructured.io or Docling for enhanced structure preservation. This dual-backend approach allows users to optimize for speed or accuracy based on their specific requirements.
+
+\subsection{Streaming Processing Pipeline}
+
+A key innovation in our approach is the implementation of streaming processing capabilities through WebSocket connections. Traditional batch processing approaches require users to wait for complete document conversion before accessing results, creating poor user experience for large documents. Our streaming implementation provides real-time progress updates and partial results, enabling interactive workflows where agents can begin processing document sections as they become available.
+
+The streaming pipeline operates through a multi-stage process: (1) document upload and initial parsing, (2) progressive text extraction with intermediate result broadcasting, (3) layout analysis and structure recognition, and (4) final Markdown assembly with metadata compilation. Each stage publishes progress updates and partial results, allowing client applications to provide responsive user interfaces and enabling early termination for preview use cases.
+
+\subsection{Agent Integration Interfaces}
+
+To maximize compatibility with existing agent frameworks, PDFToMarkdownLLM provides multiple integration pathways. The primary REST API exposes a \texttt{POST /convert} endpoint that accepts file uploads and returns structured JSON responses containing Markdown content, page mappings, and extracted metadata.
+
+For framework-specific integration, we provide pre-built adapters for major platforms. The LangChain integration wraps our API in a \texttt{Tool} class that can be directly incorporated into agent workflows. Similarly, the LlamaIndex adapter implements the \texttt{FunctionTool} interface for seamless integration with LlamaIndex agents. For OpenAI Assistants, we provide a complete function definition schema that enables automatic tool discovery and invocation.
+
+\subsection{Metadata Extraction and Enhancement}
+
+Beyond basic text extraction, PDFToMarkdownLLM generates comprehensive metadata to support advanced agent capabilities. The system produces page mapping information that links text segments to their original document locations, enabling citation and reference functionality. Figure extraction identifies and catalogs images, diagrams, and charts, providing captions and optional image URLs for multimodal processing.
+
+Table detection and extraction represents a particularly challenging aspect of PDF processing. Our implementation combines structural analysis with content heuristics to identify tabular data and preserve formatting in Markdown table syntax. For complex tables that resist structured conversion, the system provides fallback mechanisms including CSV export and image capture.
+
+\section{Implementation Details}
+
+\subsection{Multi-Backend Processing}
+
+The system implements a plugin architecture that allows for easy integration of different PDF processing backends. The base implementation uses PyMuPDF for reliable text extraction and basic layout detection. For documents requiring enhanced structure preservation, users can enable the Unstructured.io backend through the \texttt{?mode=layout} parameter, which provides superior handling of complex layouts, tables, and scanned content.
+
+Each backend implements a common interface that standardizes output format regardless of the underlying processing technology. This abstraction layer ensures that agent integrations remain consistent while allowing for backend optimization based on document characteristics.
+
+\subsection{Containerized Deployment}
+
+Recognizing the diverse deployment requirements of agent systems, PDFToMarkdownLLM provides multiple Docker targets. The \texttt{--target api-tool} configuration creates a minimal container containing only the conversion service, suitable for microservice architectures where the tool operates as a dedicated processing node. Alternative targets include the full web interface for interactive use and development-oriented configurations with debugging capabilities enabled.
+
+The containerized approach ensures consistent behavior across different deployment environments while minimizing resource overhead. The API-only container requires less than 200MB of storage and can process typical documents with minimal memory footprint, making it suitable for resource-constrained environments.
+
+\subsection{Error Handling and Robustness}
+
+Document processing systems must handle a wide variety of input formats and quality levels. Our implementation includes comprehensive error handling for common failure modes including corrupted files, unsupported formats, password-protected documents, and memory-intensive processing. The system provides graceful degradation, attempting simpler extraction methods when advanced processing fails.
+
+For scanned documents and low-quality inputs, the system automatically detects OCR requirements and can integrate with external OCR services when available. This capability is particularly important for agent systems that may encounter diverse document sources with varying quality levels.
+
+
+\section{Future Work}
+
+Based on current research trends and emerging technologies, several critical research directions emerge that could significantly advance PDF processing for agent systems.
+
+\subsection{Next-Generation Document Understanding Models}
+
+The evolution toward \textbf{vision-language-action models} represents a paradigm shift in document processing. Following recent advances in multimodal AI~\cite{zhao2024comprehensive}, future PDF processors should integrate action capabilities, enabling dynamic interaction with document content. This includes adaptive parsing strategies where models can selectively focus on relevant document sections based on user queries, significantly improving efficiency for large document collections.
+
+Recent developments in \textbf{any-to-any multimodal architectures}~\cite{gao2023retrieval} suggest promising directions for unified document processing pipelines that can seamlessly handle text, images, tables, and mathematical content within a single framework. The integration of mixture-of-experts architectures could enable specialized processing modules for different document elements while maintaining computational efficiency.
+
+\subsection{Advanced Layout and Spatial Understanding}
+
+Building on recent advances in layout-aware embeddings~\cite{huang2022layoutlmv3}, future work should explore \textbf{spatial relationship encoding} that preserves document structure in vector representations. This includes developing hierarchical embedding schemes that capture both local element relationships and global document structure, enabling more sophisticated query-document matching in RAG applications.
+
+The emergence of \textbf{markup language generation approaches} for document understanding~\cite{zhang2024document} presents opportunities for creating intermediate structured representations that preserve both semantic content and spatial relationships. Future systems could generate adaptive markup (Markdown, HTML, LaTeX) tailored to specific downstream tasks and agent requirements.
+
+\subsection{Intelligent Adaptive Processing}
+
+\textbf{Agentic parsing loops} represent a transformative approach where AI agents dynamically optimize processing strategies based on query requirements and document characteristics. This includes developing meta-learning frameworks that can adapt parsing strategies in real-time, potentially reducing processing costs by orders of magnitude for targeted information extraction.
+
+Recent work on multimodal reasoning models suggests opportunities for \textbf{chain-of-thought document processing}, where models can explain their parsing decisions and iteratively refine extraction strategies based on intermediate results. This approach could significantly improve accuracy for complex documents while providing interpretability for agent decision-making.
+
+\subsection{Robustness and Real-World Deployment}
+
+The challenge of \textbf{watermark and noise resilience} has emerged as a critical consideration for production systems. Future research should address how document modifications (watermarks, annotations, degradation) affect processing quality and develop robust preprocessing pipelines that maintain accuracy across diverse document conditions.
+
+\textbf{Multimodal retrieval and reranking} systems represent an immediate practical advancement, enabling direct PDF page retrieval without brittle text extraction pipelines. The development of ColPali-style architectures that can rank document relevance directly from visual content could eliminate traditional OCR dependencies while improving retrieval accuracy.
+
+\subsection{Long-Context and Memory-Efficient Processing}
+
+Advances in long-context language models create opportunities for \textbf{holistic document understanding} that can process entire documents without chunking. Future work should explore memory-efficient architectures that can maintain document context across hundreds of pages while enabling fine-grained information extraction.
+
+The integration of \textbf{streaming processing capabilities} with persistent memory systems could enable continuous document ingestion and updating, supporting real-time knowledge base construction and maintenance for agent systems.
+
+\subsection{Ethical and Standardized Evaluation}
+
+The establishment of \textbf{standardized evaluation frameworks} for agent-oriented document processing remains an urgent need. This includes developing benchmarks that specifically measure agent performance on document-based tasks, rather than traditional academic metrics that may not reflect real-world requirements.
+
+Future work must also address \textbf{bias and fairness considerations} in document processing, ensuring that parsing quality remains consistent across different document types, languages, and visual presentations. This includes developing inclusive datasets and evaluation metrics that capture performance across diverse document sources and styles.
+
+\section{Conclusion}
+
+This paper presented the design and implementation of PDFToMarkdownLLM, a specialized tool for integrating PDF processing capabilities into LLM-based agent systems. Our work addresses the critical integration gap between existing document processing technologies and the practical requirements of modern agent frameworks through careful architectural design and standardized interfaces.
+
+The primary contributions of this work center on bridging implementation gaps rather than advancing core parsing algorithms. Our modular multi-backend architecture provides flexibility in choosing processing strategies while maintaining consistent output formats. The real-time streaming capabilities through WebSocket connections enable responsive user experiences that are essential for interactive agent applications. Most importantly, our standardized REST and tool-calling APIs minimize the integration overhead that has historically limited the adoption of sophisticated document processing in agent systems.
+
+The architectural decisions made in PDFToMarkdownLLM reflect a pragmatic approach to system design that prioritizes practical deployment considerations. The containerized microservice architecture enables flexible integration into diverse system environments, while the comprehensive metadata extraction capabilities—including page mapping and figure handling—provide the rich context information needed for advanced agent functionalities such as citation generation and multimodal processing.
+
+Beyond its immediate technical contributions, PDFToMarkdownLLM represents an important step toward treating document processing as a first-class capability in agent system architectures. By providing consistent, well-documented interfaces across major frameworks and implementing proven integration patterns, this work helps establish design principles that can guide future development in the rapidly evolving landscape of document-based AI applications.
+
+The open-source implementation serves multiple purposes: it provides immediate practical value for researchers and practitioners working with document-based agent systems, demonstrates that sophisticated document processing can be made accessible through thoughtful interface design, and establishes a foundation for future research into more advanced processing capabilities and integration patterns.
+
+As the field continues to advance toward more sophisticated multimodal document understanding and adaptive processing strategies, the architectural principles and integration patterns demonstrated in PDFToMarkdownLLM provide a practical foundation for incorporating these advances into real-world agent systems. The combination of modular backend support, streaming capabilities, and standardized APIs creates an extensible platform that can evolve with emerging technologies while maintaining backward compatibility and ease of use.
+
+The complete implementation is available as open-source software under the MIT license at \url{https://github.com/ShanningZhuang/PDFToMarkdownLLM}~\cite{zhuang2024pdftomarkdownllm}, with a live demonstration accessible at \url{https://pdf2markdown.tech/}, ensuring that these capabilities remain accessible to the broader research and development community.
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}
